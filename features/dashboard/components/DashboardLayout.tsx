@@ -14,6 +14,7 @@ export const DashboardLayout = () => {
     isInitialLoading,
     isFileLoading,
     handleFileClick,
+    refreshFiles,
   } = useDashboard();
 
   return (
@@ -23,6 +24,7 @@ export const DashboardLayout = () => {
         selectedFile={selectedFile} 
         onFileClick={handleFileClick} 
         loading={isInitialLoading}
+        onRepoCloned={refreshFiles}
       />
       
       <div className="flex-1 flex flex-col h-full overflow-hidden">

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from '../../components/Button';
 
 export default function Home() {
@@ -17,27 +19,6 @@ export default function Home() {
             size="lg"
             onClick={() => window.location.href = '/dashboard'} 
           />
-          <Button 
-            label="Check Health" 
-            variant="outline"
-            size="lg"
-            onClick={() => window.location.href = 'http://localhost:8000/api/health'} 
-          />
-        </div>
-
-        <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-zinc-500">
-          <div className="p-4 border rounded-2xl bg-white dark:bg-zinc-900 shadow-sm">
-            <p className="font-bold text-black dark:text-white mb-1 text-base">Structure</p>
-            Feature-based Logic
-          </div>
-          <div className="p-4 border rounded-2xl bg-white dark:bg-zinc-900 shadow-sm">
-            <p className="font-bold text-black dark:text-white mb-1 text-base">API</p>
-            FastAPI with Pydantic
-          </div>
-          <div className="p-4 border rounded-2xl bg-white dark:bg-zinc-900 shadow-sm">
-            <p className="font-bold text-black dark:text-white mb-1 text-base">Status</p>
-            Environment Ready
-          </div>
         </div>
       </main>
     </div>

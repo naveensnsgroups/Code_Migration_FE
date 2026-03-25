@@ -15,7 +15,7 @@ export const Button = ({
   className = '', 
   ...props 
 }: ButtonProps) => {
-  const baseStyles = "font-bold rounded-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-sm";
+  const baseStyles = "font-bold rounded-sm transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-sm";
   
   const variants = {
     primary: "bg-yellow-400 hover:bg-yellow-500 text-black shadow-lg shadow-yellow-900/10",

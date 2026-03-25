@@ -51,5 +51,6 @@ export const useDashboard = () => {
     isInitialLoading,
     isFileLoading,
     handleFileClick,
+    refreshFiles: () => fetchFiles(),
   };
 };
