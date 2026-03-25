@@ -13,7 +13,7 @@ interface RepoPickerProps {
 export const RepoPicker = ({ repos, onSelect, loading }: RepoPickerProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredRepos = repos.filter(repo => 
+  const filteredRepos = repos.filter(repo =>
     repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     repo.full_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -51,15 +51,15 @@ export const RepoPicker = ({ repos, onSelect, loading }: RepoPickerProps) => {
               className="w-full text-left p-3 rounded-sm bg-zinc-900/60 border border-zinc-800 hover:border-yellow-400/40 hover:bg-zinc-800/80 transition-all group"
             >
               <div className="flex justify-between items-start mb-1">
-                <span className="text-sm font-bold text-zinc-100 group-hover:text-yellow-400 truncate">
+                <span className="text-sm font-semibold text-zinc-100 group-hover:text-yellow-400 truncate">
                   {repo.name}
                 </span>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-bold uppercase">
+                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-semibold uppercase">
                   <Star className="w-3 h-3 text-yellow-500/80" />
                   {repo.stargazers_count}
                 </div>
               </div>
-              
+
               {repo.description && (
                 <p className="text-[11px] text-zinc-500 line-clamp-1 mb-2 leading-relaxed">
                   {repo.description}

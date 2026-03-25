@@ -1,16 +1,7 @@
 import axios from 'axios';
+import { RepoInfo } from '../types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
-export interface RepoInfo {
-  id: number;
-  name: string;
-  full_name: string;
-  html_url: string;
-  description: string | null;
-  language: string | null;
-  stargazers_count: number;
-}
 
 export const githubApi = {
   getLoginUrl: () => 

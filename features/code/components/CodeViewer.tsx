@@ -19,7 +19,7 @@ export const CodeViewer = ({ selectedFile, fileContent, loading }: CodeViewerPro
           <Database className="w-12 h-12 text-zinc-700" />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-bold text-white">No File Selected</h3>
+          <h3 className="text-xl font-semibold text-white">No File Selected</h3>
           <p className="text-zinc-500 max-w-xs mx-auto text-sm leading-relaxed">
             Select a file from the explorer to begin analyzing and migrating your code.
           </p>
@@ -40,7 +40,7 @@ export const CodeViewer = ({ selectedFile, fileContent, loading }: CodeViewerPro
           </span>
         </div>
       </header>
-      
+
       <div className="flex-1 p-8 overflow-hidden">
         {loading ? (
           <div className="space-y-4">

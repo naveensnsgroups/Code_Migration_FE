@@ -21,7 +21,7 @@ export const Sidebar = ({ files, selectedFile, onFileClick, loading, onRepoClone
         <div className="p-2 bg-yellow-400 rounded-sm">
           <Rocket className="w-5 h-5 text-black" />
         </div>
-        <h1 className="font-bold text-lg tracking-tight text-white">Migration Hub</h1>
+        <h1 className="font-semibold text-lg tracking-tight text-white">Migration Hub</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -50,9 +50,8 @@ export const Sidebar = ({ files, selectedFile, onFileClick, loading, onRepoClone
               <button
                 key={file.path}
                 onClick={() => onFileClick(file)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all hover:bg-zinc-800 text-sm ${
-                  selectedFile === file.path ? 'bg-zinc-800 text-white shadow-inner' : ''
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all hover:bg-zinc-800 text-sm ${selectedFile === file.path ? 'bg-zinc-800 text-white shadow-inner' : ''
+                  }`}
               >
                 {file.isDir ? (
                   <Folder className="w-4 h-4 text-yellow-500/80 fill-yellow-500/20" />
