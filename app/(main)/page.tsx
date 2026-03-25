@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionButton } from './features/components/ActionButton';
+import { ActionButton } from '../features/components/ActionButton';
 
 export default function Home() {
   return (
