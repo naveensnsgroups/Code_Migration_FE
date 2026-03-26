@@ -24,23 +24,33 @@ export const GitHubConnect = ({ onCloneSuccess }: GitHubConnectProps) => {
 
   if (authState === 'unauthenticated') {
     return (
-      <div className="p-5 space-y-4 bg-zinc-900/40">
-        <div className="flex items-center gap-2 text-zinc-400">
-          <GitBranch className="w-4 h-4" />
-          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-300">Source Control</span>
+      <div className="p-6 space-y-5 bg-zinc-900/20 border-b border-zinc-800/50">
+        <div className="flex items-center gap-2.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow animate-pulse shadow-[0_0_8px_#FACC15]" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Source Control</span>
         </div>
-        <p className="text-[11px] text-zinc-500 leading-relaxed">
-          Connect your GitHub account to browse and migrate your repositories directly.
-        </p>
-        <button
-          onClick={login}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-zinc-100 hover:bg-white text-black text-xs font-black rounded-sm transition-all active:scale-95 shadow-lg shadow-white/5 uppercase tracking-tighter"
-        >
-          <LogIn className="w-4 h-4" />
-          Login with GitHub
-        </button>
+        
+        <div className="relative group p-4 bg-zinc-950 border border-zinc-800 rounded-sm hover:border-brand-yellow/30 transition-all duration-500">
+          <div className="absolute inset-0 bg-brand-yellow/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <p className="relative text-[11px] text-zinc-400 leading-relaxed mb-4">
+            Connect your <span className="text-zinc-200 font-bold">GitHub</span> account to securely browse and migrate your source code.
+          </p>
+          
+          <button
+            onClick={login}
+            className="group/btn relative w-full h-10 bg-brand-yellow hover:bg-white text-black text-[11px] font-medium rounded-sm transition-all active:scale-95 shadow-sm overflow-hidden"
+            style={{ backgroundColor: '#FACC15', color: '#000000' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
+            <div className="relative flex items-center justify-center gap-2 uppercase tracking-wide">
+              <LogIn className="w-3.5 h-3.5 text-black" />
+              <span>Sign In to GitHub</span>
+            </div>
+          </button>
+        </div>
+
         {status === 'error' && (
-          <div className="flex items-center gap-2 text-red-400 text-[10px] font-semibold">
+          <div className="flex items-center gap-2 text-red-500 text-[9px] font-bold bg-red-500/5 p-2 border border-red-500/10">
             <AlertCircle className="w-3 h-3" />
             {message}
           </div>

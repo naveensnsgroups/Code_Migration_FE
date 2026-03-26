@@ -9,4 +9,7 @@ export const dashboardApi = {
     
   readSourceFile: (path: string) => 
     axios.get<FileContent>(`${API_BASE_URL}/api/files/read?path=${path}`),
+    
+  analyzeSourceFile: (path: string) =>
+    axios.post(`${API_BASE_URL}/api/migrations/analyze`, { path }),
 };

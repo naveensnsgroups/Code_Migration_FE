@@ -7,6 +7,7 @@ import { GitHubConnect } from './GitHubConnect';
 import { FileItem } from '../types';
 
 interface SidebarProps {
+  activeTab: 'explorer' | 'git';
   files: FileItem[];
   selectedFile: string | null;
   onFileClick: (file: FileItem) => void;
@@ -37,58 +38,71 @@ const getFileIcon = (fileName: string) => {
   }
 };
 
-export const Sidebar = ({ files, selectedFile, onFileClick, loading, onRepoCloned }: SidebarProps) => {
+export const Sidebar = ({ activeTab, files, selectedFile, onFileClick, loading, onRepoCloned }: SidebarProps) => {
   return (
-    <aside className="w-80 border-r border-zinc-800 flex flex-col bg-zinc-900/50 backdrop-blur-xl shrink-0 h-full font-sans">
-      <div className="p-6 border-b border-zinc-800 flex items-center gap-3">
-        <div className="p-2 bg-yellow-400 rounded-sm shadow-[0_0_15px_rgba(250,204,21,0.2)]">
-          <Rocket className="w-5 h-5 text-black" />
+    <aside className="w-80 border-r border-zinc-900 flex flex-col bg-[#09090b] shrink-0 h-full font-sans overflow-hidden">
+      {/* Surgical Minimalist Header */}
+      <div className="p-5 border-b border-zinc-900 bg-zinc-950/30">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 flex items-center justify-center bg-brand-yellow/10 rounded-sm border border-brand-yellow/20">
+            <Rocket className="w-4 h-4 text-brand-yellow" />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-medium text-[9px] text-brand-yellow/70 uppercase tracking-[0.2em] leading-none mb-1">Antigravity</span>
+            <h1 className="font-medium text-[13px] tracking-tight text-zinc-100 uppercase italic">
+              {activeTab === 'explorer' ? 'Explorer' : 'Source Control'}
+            </h1>
+          </div>
         </div>
-        <h1 className="font-bold text-lg tracking-tight text-white uppercase italic">Migration Hub</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto">
-
-        {/* GitHub Connect panel — always shown at top */}
-        <div className="border-b border-zinc-800">
-          <GitHubConnect onCloneSuccess={onRepoCloned} />
-        </div>
-
-        {/* File Tree */}
-        <div className="p-4 space-y-2">
-          <div className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 px-2">
-            Legacy Source Explorer
+        {activeTab === 'git' ? (
+          <div className="divide-y divide-zinc-900">
+            <GitHubConnect onCloneSuccess={onRepoCloned} />
           </div>
+        ) : (
+          <div className="p-4 space-y-1">
+            <div className="flex items-center justify-between mb-4 px-2">
+              <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-[0.2em]">Repository Files</span>
+              <div className="w-8 h-[1px] bg-zinc-800" />
+            </div>
 
-          {loading ? (
-            <div className="space-y-3 px-2">
-              <Skeleton className="h-10 w-full" count={6} />
-            </div>
-          ) : files.length === 0 ? (
-            <div className="p-4 text-[11px] text-zinc-500 italic bg-zinc-800/10 rounded-sm border border-dashed border-zinc-800 text-center">
-              No source code detected. Connect a repository above.
-            </div>
-          ) : (
-            files.map((file) => (
-              <button
-                key={file.path}
-                onClick={() => onFileClick(file)}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-sm transition-all hover:bg-zinc-800/50 text-xs font-semibold ${
-                  selectedFile === file.path 
-                    ? 'bg-zinc-800 text-white shadow-inner border-l-2 border-yellow-400 pl-[10px]' 
-                    : 'text-zinc-400'
-                }`}
-              >
-                {file.isDir ? (
-                  <Folder className="w-4 h-4 text-yellow-500/80 fill-yellow-500/10" />
-                ) : (
-                  getFileIcon(file.name)
-                )}
-                <span className="truncate">{file.name}</span>
-              </button>
-            ))
-          )}
-        </div>
+            {loading ? (
+              <div className="space-y-3 px-2">
+                <Skeleton className="h-8 w-full" count={8} />
+              </div>
+            ) : files.length === 0 ? (
+              <div className="p-8 text-[11px] text-zinc-500 italic bg-zinc-950/20 rounded-sm border border-zinc-900 text-center leading-relaxed">
+                Connect a repository in the <br/>
+                <span className="text-brand-yellow font-medium uppercase tracking-wider">Source Control</span> tab
+              </div>
+            ) : (
+              <div className="relative border-l border-zinc-800/50 ml-2 pl-1 space-y-0.5">
+                {files.map((file) => (
+                  <button
+                    key={file.path}
+                    onClick={() => onFileClick(file)}
+                    className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-sm transition-all text-[11px] font-medium group ${
+                      selectedFile === file.path 
+                        ? 'bg-brand-yellow/5 text-brand-yellow border-r border-brand-yellow/30' 
+                        : 'text-zinc-400 hover:bg-zinc-800/20 hover:text-zinc-200'
+                    }`}
+                  >
+                    <div className="shrink-0">
+                      {file.isDir ? (
+                        <Folder className="w-3.5 h-3.5 text-brand-yellow/40" />
+                      ) : (
+                        getFileIcon(file.name)
+                      )}
+                    </div>
+                    <span className="truncate tracking-tight">{file.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </aside>
   );

@@ -11,6 +11,8 @@ export const useDashboard = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isFileLoading, setIsFileLoading] = useState(false);
 
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
   const fetchFiles = async (path: string = "") => {
     setIsInitialLoading(true);
     try {
@@ -20,6 +22,18 @@ export const useDashboard = () => {
       console.error('Error fetching files:', error);
     } finally {
       setIsInitialLoading(false);
+    }
+  };
+
+  const analyzeFile = async () => {
+    if (!selectedFile) return;
+    setIsAnalyzing(true);
+    try {
+      await dashboardApi.analyzeSourceFile(selectedFile);
+    } catch (error) {
+      console.error('Analysis failed:', error);
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -50,7 +64,9 @@ export const useDashboard = () => {
     fileContent,
     isInitialLoading,
     isFileLoading,
+    isAnalyzing,
     handleFileClick,
+    analyzeFile,
     refreshFiles: () => fetchFiles(),
   };
 };

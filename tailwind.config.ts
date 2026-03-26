@@ -14,8 +14,14 @@ const config: Config = {
         mono: ['var(--font-jetbrains)', 'monospace'],
       },
       colors: {
+        brand: {
+          yellow: '#FACC15',
+          gold: '#EAB308',
+        },
         zinc: {
           950: '#09090b',
+          900: '#18181b',
+          800: '#27272a',
         }
       }
     },

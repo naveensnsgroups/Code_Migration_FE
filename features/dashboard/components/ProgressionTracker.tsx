@@ -26,16 +26,16 @@ export const ProgressionTracker = ({ currentStep }: ProgressionTrackerProps) => 
           <React.Fragment key={step.id}>
             <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all border ${
               isActive 
-                ? 'bg-yellow-400/10 border-yellow-400 text-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.1)]' 
+                ? 'bg-brand-yellow/5 border-brand-yellow/30 text-brand-yellow shadow-sm' 
                 : isCompleted
                   ? 'bg-emerald-400/5 border-emerald-400/20 text-emerald-400'
                   : 'bg-transparent border-transparent text-zinc-600'
             }`}>
               <Icon className={`w-3.5 h-3.5 ${isActive ? 'animate-pulse' : ''}`} />
-              <span className="text-[10px] font-black uppercase tracking-widest">{step.label}</span>
+              <span className="text-[10px] font-medium uppercase tracking-[0.1em]">{step.label}</span>
             </div>
             {index < steps.length - 1 && (
-              <ChevronRight className="w-4 h-4 text-zinc-800" />
+              <ChevronRight className="w-3 h-3 text-zinc-800" />
             )}
           </React.Fragment>
         );
