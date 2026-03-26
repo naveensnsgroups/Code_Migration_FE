@@ -60,13 +60,28 @@ export const CodeViewer = ({ selectedFile, fileContent, loading }: CodeViewerPro
             loading={<div className="flex items-center justify-center h-full text-zinc-500">Loading code engine...</div>}
             options={{
               readOnly: true,
-              fontSize: 14,
-              minimap: { enabled: true },
-              padding: { top: 20 },
+              fontSize: 13,
+              minimap: { enabled: true, scale: 0.75, showSlider: 'mouseover' },
+              padding: { top: 20, bottom: 20 },
               lineNumbers: 'on',
+              lineNumbersMinChars: 3,
               scrollBeyondLastLine: false,
               automaticLayout: true,
               fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+              smoothScrolling: true,
+              cursorBlinking: 'smooth',
+              cursorSmoothCaretAnimation: "on",
+              renderLineHighlight: 'all',
+              fontLigatures: true,
+              hideCursorInOverviewRuler: true,
+              overviewRulerBorder: false,
+              scrollbar: {
+                vertical: 'hidden',
+                horizontal: 'hidden',
+                useShadows: false,
+                verticalHasArrows: false,
+                horizontalHasArrows: false,
+              }
             }}
           />
         )}
