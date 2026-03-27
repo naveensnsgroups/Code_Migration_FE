@@ -7,7 +7,7 @@ import { GitHubConnect } from './GitHubConnect';
 import { FileItem } from '../types';
 
 interface SidebarProps {
-  activeTab: 'explorer' | 'git';
+  activeTab: 'explorer' | 'git' | 'migration_hub';
   files: FileItem[];
   selectedFile: string | null;
   onFileClick: (file: FileItem) => void;
@@ -144,7 +144,7 @@ export const Sidebar = ({
             <span className="font-medium text-[9px] text-[var(--accent-primary)] uppercase tracking-[0.2em] leading-none mb-1">Migrate AI</span>
             <div className="flex items-center justify-between w-48">
               <h1 className="font-medium text-[13px] tracking-tight text-[var(--text-main)] uppercase italic">
-                {activeTab === 'explorer' ? 'Explorer' : 'Source Control'}
+                {activeTab === 'explorer' ? 'Explorer' : activeTab === 'migration_hub' ? 'Migration Hub' : 'Source Control'}
               </h1>
               {activeTab === 'explorer' && (
                 <div className="flex gap-1 text-[var(--text-muted)] opacity-40">

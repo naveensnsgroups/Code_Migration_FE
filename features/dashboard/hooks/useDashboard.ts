@@ -20,6 +20,7 @@ export const useDashboard = () => {
   const [isMigrating, setIsMigrating] = useState(false);
   const [activeLogicUnitId, setActiveLogicUnitId] = useState<string | null>(null);
   
+  const [activeTab, setActiveTab] = useState<'explorer' | 'git' | 'migration_hub'>('explorer');
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -130,18 +131,27 @@ export const useDashboard = () => {
     }
   };
 
+  const [purpose, setPurpose] = useState('');
+  const [architecture, setArchitecture] = useState('');
+  const [mappedStructure, setMappedStructure] = useState('');
+  const [blueprint, setBlueprint] = useState<{core_logic: string; hotspots: string[]} | null>(null);
+
   const analyzeProject = async () => {
     setIsAnalyzing(true);
-    addLog('Initiating recursive repository scan...', 'info');
-    addLog('Gemini 1.5 Flash processing codebase context...', 'ai');
+    addLog('Starting Deep Gitingest-style Project Analysis...', 'info');
     try {
       const response = await dashboardApi.analyzeProject();
-      if (response.data.logic_units) {
-        setAnalysisResults(response.data.logic_units);
-        setProjectStack(response.data.stack);
-        addLog(`Successfully mapped ${response.data.logic_units.length} logic units.`, 'success');
-        addLog(`Tech stack detected: ${response.data.stack.frontend} / ${response.data.stack.backend}`, 'info');
-      }
+      const data = response.data;
+      
+      setPurpose(data.purpose || 'General Codebase');
+      setArchitecture(data.architecture || 'Standard Web App');
+      setMappedStructure(data.mapped_structure || '');
+      setBlueprint(data.blueprint || null);
+      setProjectStack(data.stack || null);
+      setAnalysisResults(data.logic_units || []);
+      
+      addLog(`Deep Analysis Complete! Detected ${data.architecture || 'Standard'} architecture.`, 'success');
+      addLog(`AI Intel: ${data.purpose || 'Project purpose mapped.'}`, 'ai');
     } catch (error) {
       addLog('Project analysis failed. Please check Gemini API status.', 'error');
       console.error('Project analysis failed:', error);
@@ -207,6 +217,12 @@ export const useDashboard = () => {
     activeLogicUnitId,
     setActiveLogicUnitId,
     refreshFiles: () => fetchFiles(),
+    purpose,
+    architecture,
+    blueprint,
+    mappedStructure,
+    activeTab,
+    setActiveTab,
     closeFile: () => {
       setSelectedFile(null);
       setFileContent('');

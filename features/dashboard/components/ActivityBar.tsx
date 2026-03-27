@@ -1,12 +1,12 @@
 "use client";
 
 import React from 'react';
-import { Files, Search, GitBranch, Bug, Settings, User, Sun, Moon } from 'lucide-react';
+import { Files, Search, GitBranch, Bug, Settings, User, Sun, Moon, Zap } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 
 interface ActivityBarProps {
-  activeTab: 'explorer' | 'git';
-  onTabChange: (tab: 'explorer' | 'git') => void;
+  activeTab: 'explorer' | 'git' | 'migration_hub';
+  onTabChange: (tab: 'explorer' | 'git' | 'migration_hub') => void;
   authState: 'unauthenticated' | 'authenticating' | 'authenticated';
   onLogout: () => void;
   badgeCount?: number;
@@ -24,12 +24,24 @@ export const ActivityBar = ({ activeTab, onTabChange, authState, onLogout, badge
         <button 
           onClick={() => onTabChange('explorer')}
           className="relative w-full h-12 flex items-center justify-center group"
-          title="Explorer"
+          title="Explorer (Normal Mode)"
         >
           {activeTab === 'explorer' && (
             <div className="absolute left-0 w-[2.5px] h-6 bg-[var(--accent-primary)] rounded-r-full shadow-[0_0_12px_rgba(250,204,21,0.3)]" />
           )}
           <Files className={`w-5 h-5 transition-colors ${activeTab === 'explorer' ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text-accent)]'}`} />
+        </button>
+
+        {/* Migration Hub */}
+        <button 
+          onClick={() => onTabChange('migration_hub')}
+          className="relative w-full h-12 flex items-center justify-center group"
+          title="Migration Intelligence Hub"
+        >
+          {activeTab === 'migration_hub' && (
+            <div className="absolute left-0 w-[2.5px] h-6 bg-[var(--accent-primary)] rounded-r-full shadow-[0_0_12px_rgba(250,204,21,0.3)]" />
+          )}
+          <Zap className={`w-5 h-5 transition-colors ${activeTab === 'migration_hub' ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text-accent)]'}`} />
         </button>
 
         {/* Source Control */}
@@ -43,11 +55,6 @@ export const ActivityBar = ({ activeTab, onTabChange, authState, onLogout, badge
           )}
           <div className="relative">
             <GitBranch className={`w-[18px] h-[18px] transition-colors ${activeTab === 'git' ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text-accent)]'}`} />
-            {badgeCount && badgeCount > 0 ? (
-              <span className="absolute -top-2 -right-2.5 bg-blue-600 text-[9px] font-medium text-white min-w-[14px] h-[14px] flex items-center justify-center rounded-full ring-2 ring-[var(--bg-activity)] tracking-tighter">
-                {badgeCount}
-              </span>
-            ) : null}
           </div>
         </button>
       </div>
