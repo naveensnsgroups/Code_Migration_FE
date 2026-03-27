@@ -19,7 +19,46 @@ export const useDashboard = () => {
   const [projectStack, setProjectStack] = useState<{frontend: string; backend: string; database?: string} | null>(null);
   const [isMigrating, setIsMigrating] = useState(false);
   const [activeLogicUnitId, setActiveLogicUnitId] = useState<string | null>(null);
+  
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Sync selectedFile to localStorage
+  useEffect(() => {
+    const savedFile = localStorage.getItem('gh_selected_file');
+    if (savedFile) {
+      setSelectedFile(savedFile);
+    }
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      if (selectedFile) {
+        localStorage.setItem('gh_selected_file', selectedFile);
+      } else {
+        localStorage.removeItem('gh_selected_file');
+      }
+    }
+  }, [selectedFile, isMounted]);
+
+  // Restore file content if selectedFile exists on mount
+  useEffect(() => {
+    if (isMounted && selectedFile && !fileContent && !isFileLoading) {
+      const restoreFile = async () => {
+        setIsFileLoading(true);
+        try {
+          const response = await dashboardApi.readSourceFile(selectedFile);
+          setFileContent(response.data.content);
+        } catch (error) {
+          console.error('Failed to restore file content:', error);
+        } finally {
+          setIsFileLoading(false);
+        }
+      };
+      restoreFile();
+    }
+  }, [isMounted, selectedFile]);
 
   const addLog = (message: string, type: 'info' | 'success' | 'warning' | 'error' | 'ai' = 'info') => {
     setLogs(prev => [...prev, {
@@ -118,16 +157,17 @@ export const useDashboard = () => {
   };
 
   const executeMigration = async () => {
-    if (!selectedFile) return;
-    const selectedIds = analysisResults.filter(u => u.selected).map(u => u.id);
-    if (selectedIds.length === 0) return;
+    const selectedUnits = analysisResults.filter(u => u.selected);
+    if (selectedUnits.length === 0) return;
 
     setIsMigrating(true);
+    addLog(`Executing migration for ${selectedUnits.length} logic units...`, 'info');
     try {
-      const response = await dashboardApi.executeMigration(selectedFile, selectedIds);
+      const response = await dashboardApi.executeMigration(selectedUnits);
       console.log('Migration Success:', response.data);
-      // We could add a successful log entry here if we exposed setLogs
+      addLog('Migration completed successfully!', 'success');
     } catch (error) {
+      addLog('Migration failed. Check backend logs.', 'error');
       console.error('Migration failed:', error);
     } finally {
       setIsMigrating(false);

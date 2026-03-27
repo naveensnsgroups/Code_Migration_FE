@@ -11,6 +11,43 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
   const [message, setMessage] = useState('');
   const [selectedRepo, setSelectedRepo] = useState<RepoInfo | null>(null);
 
+  // Restore session from localStorage on mount
+  useEffect(() => {
+    const savedToken = localStorage.getItem('gh_access_token');
+    const savedRepo = localStorage.getItem('gh_selected_repo');
+    
+    if (savedToken) {
+      setAccessToken(savedToken);
+      setAuthState('authenticated');
+      fetchRepos(savedToken);
+    }
+
+    if (savedRepo) {
+      try {
+        setSelectedRepo(JSON.parse(savedRepo));
+      } catch (e) {
+        console.error('Failed to parse saved repo:', e);
+      }
+    }
+  }, []);
+
+  // Sync state to localStorage
+  useEffect(() => {
+    if (accessToken) {
+      localStorage.setItem('gh_access_token', accessToken);
+    } else {
+      localStorage.removeItem('gh_access_token');
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (selectedRepo) {
+      localStorage.setItem('gh_selected_repo', JSON.stringify(selectedRepo));
+    } else {
+      localStorage.removeItem('gh_selected_repo');
+    }
+  }, [selectedRepo]);
+
   // Handle OAuth callback on mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -95,6 +132,10 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
     setAuthState('unauthenticated');
     setStatus('idle');
     setMessage('');
+
+    // Clear session storage
+    localStorage.removeItem('gh_access_token');
+    localStorage.removeItem('gh_selected_repo');
     
     // Hard reset: Clear URL and force fresh state
     const cleanUrl = window.location.pathname;
