@@ -99,6 +99,7 @@ export const DashboardLayout = () => {
         folderContents={folderContents}
         expandedFolders={expandedFolders}
         width={sidebarWidth}
+        clonedRepo={github.selectedRepo?.name}
       />
 
       {/* Resize Handle */}

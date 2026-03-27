@@ -9,6 +9,7 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
   const [status, setStatus] = useState<'idle' | 'cloning' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [selectedRepo, setSelectedRepo] = useState<RepoInfo | null>(null);
 
   // Handle OAuth callback on mount
   useEffect(() => {
@@ -64,6 +65,7 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
     if (!accessToken) return;
     setStatus('cloning');
     setMessage('');
+    setSelectedRepo(repo);
     try {
       await githubApi.cloneSelected(repo.html_url, accessToken);
       setStatus('success');
@@ -74,6 +76,7 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
       }, 1500);
     } catch (err: any) {
       setStatus('error');
+      setSelectedRepo(null);
       setMessage(err?.response?.data?.detail || 'Clone failed.');
     }
   };
@@ -88,6 +91,7 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
 
     setAccessToken(null);
     setRepos([]);
+    setSelectedRepo(null);
     setAuthState('unauthenticated');
     setStatus('idle');
     setMessage('');
@@ -107,6 +111,7 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
     logout,
     fetchRepos: () => accessToken && fetchRepos(accessToken),
     cloneRepo,
-    accessToken
+    accessToken,
+    selectedRepo
   };
 };

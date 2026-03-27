@@ -16,6 +16,7 @@ interface SidebarProps {
   folderContents?: Record<string, FileItem[]>;
   expandedFolders?: Set<string>;
   width: number;
+  clonedRepo?: string;
 }
 
 const getFileIcon = (fileName: string) => {
@@ -125,7 +126,8 @@ export const Sidebar = ({
   github,
   folderContents = {},
   expandedFolders = new Set(),
-  width
+  width,
+  clonedRepo
 }: SidebarProps) => {
   return (
     <aside 
@@ -164,7 +166,9 @@ export const Sidebar = ({
         ) : (
           <div className="py-2">
             <div className="flex items-center justify-between mb-2 px-6">
-              <span className="text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-[0.2em]">Repository Files</span>
+              <span className="text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-[0.2em] truncate max-w-[180px]">
+                {clonedRepo || 'Repository Files'}
+              </span>
               <div className="w-8 h-[1px] bg-[var(--border-main)]" />
             </div>
 
