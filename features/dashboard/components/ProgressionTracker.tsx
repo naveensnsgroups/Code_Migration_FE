@@ -25,16 +25,16 @@ export const ProgressionTracker = ({ currentStep }: ProgressionTrackerProps) => 
         return (
           <React.Fragment key={step.id}>
             <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-all border ${isActive
-                ? 'bg-[var(--accent-primary)]/5 border-[var(--accent-primary)]/30 text-[var(--accent-primary)] shadow-sm'
+                ? 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]/40 text-[var(--accent-primary)] shadow-sm font-bold'
                 : isCompleted
-                  ? 'bg-emerald-400/5 border-emerald-400/20 text-emerald-400'
-                  : 'bg-transparent border-transparent text-[var(--text-muted)]'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'
+                  : 'bg-transparent border-transparent text-[var(--text-main)] opacity-50'
               }`}>
-              <Icon className={`w-3 h-3 ${isActive ? 'animate-pulse' : ''}`} />
-              <span className="text-[9px] font-medium uppercase tracking-widest">{step.label}</span>
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'animate-pulse' : ''}`} />
+              <span className="text-[10px] font-bold uppercase tracking-widest">{step.label}</span>
             </div>
             {index < steps.length - 1 && (
-              <ChevronRight className="w-2.5 h-2.5 text-[var(--border-main)]" />
+              <ChevronRight className="w-3 h-3 text-[var(--text-main)] opacity-20" />
             )}
           </React.Fragment>
         );

@@ -20,4 +20,7 @@ export const githubApi = {
       repo_url: repoUrl,
       access_token: accessToken
     }),
+
+  cleanup: () =>
+    axios.post(`${API_BASE}/api/github/cleanup`),
 };

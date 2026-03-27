@@ -15,6 +15,7 @@ interface SidebarProps {
   github: any;
   folderContents?: Record<string, FileItem[]>;
   expandedFolders?: Set<string>;
+  width: number;
 }
 
 const getFileIcon = (fileName: string) => {
@@ -67,34 +68,36 @@ const FileTreeItem = ({
         onClick={() => onFileClick(file)}
         style={{ paddingLeft: `${level * 12 + 12}px` }}
         className={`w-full flex items-center gap-2 py-1 transition-colors text-[11px] font-medium group relative ${isSelected
-            ? 'bg-brand-yellow/5 text-brand-yellow'
-            : 'text-zinc-400 hover:bg-zinc-800/20 hover:text-zinc-200'
+            ? 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
+            : 'text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-main)]'
           }`}
       >
         {isSelected && (
-          <div className="absolute left-0 w-[2px] h-full bg-brand-yellow/50" />
+          <div className="absolute left-0 w-[2px] h-full bg-[var(--accent-primary)]" />
         )}
 
         <div className="w-4 h-4 flex items-center justify-center shrink-0">
           {file.isDir ? (
-            isExpanded ? <ChevronDown className="w-3 h-3 text-zinc-500" /> : <ChevronRight className="w-3 h-3 text-zinc-500" />
+            isExpanded ? <ChevronDown className="w-3 h-3 text-[var(--text-muted)]" /> : <ChevronRight className="w-3 h-3 text-[var(--text-muted)]" />
           ) : null}
         </div>
 
-        <div className="shrink-0">
+        <div className="shrink-0 group-hover:opacity-100 transition-opacity">
           {file.isDir ? (
-            <Folder className={`w-3.5 h-3.5 ${isExpanded ? 'text-brand-yellow/60' : 'text-brand-yellow/40'}`} />
+            <Folder className={`w-3.5 h-3.5 ${isExpanded ? 'text-[var(--accent-primary)]/70' : 'text-[var(--accent-primary)]/40'}`} />
           ) : (
-            getFileIcon(file.name)
+            <div className="opacity-80 group-hover:opacity-100">
+               {getFileIcon(file.name)}
+            </div>
           )}
         </div>
 
-        <span className={`truncate tracking-tight ${file.status === 'modified' ? 'text-yellow-500/80' : ''}`}>
+        <span className={`truncate tracking-tight ${isSelected ? 'text-[var(--text-main)] font-semibold' : 'text-[var(--text-main)]'} ${file.status === 'modified' ? 'text-amber-600' : ''}`}>
           {file.name}
         </span>
 
         {file.status === 'modified' && (
-          <span className="ml-auto mr-4 text-[9px] font-medium text-yellow-500/60 w-3 h-3 flex items-center justify-center">M</span>
+          <span className="ml-auto mr-4 text-[9px] font-black text-amber-600 w-3 h-3 flex items-center justify-center">M</span>
         )}
       </button>
 
@@ -121,15 +124,19 @@ export const Sidebar = ({
   loading,
   github,
   folderContents = {},
-  expandedFolders = new Set()
+  expandedFolders = new Set(),
+  width
 }: SidebarProps) => {
   return (
-    <aside className="w-80 border-r border-[var(--border-main)] flex flex-col bg-[var(--bg-sidebar)] shrink-0 h-full font-sans overflow-hidden transition-colors duration-300">
+    <aside 
+      style={{ width: `${width}px` }}
+      className="border-r border-[var(--border-main)] flex flex-col bg-[var(--bg-sidebar)] shrink-0 h-full font-sans overflow-hidden transition-colors duration-300 relative"
+    >
       {/* Surgical Minimalist Header */}
       <div className="p-5 border-b border-[var(--border-main)] bg-[var(--bg-sidebar)]/50">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 flex items-center justify-center bg-[var(--accent-primary)]/10 rounded-sm border border-[var(--accent-primary)]/20">
-            <Rocket className="w-4 h-4 text-brand-yellow" />
+            <Rocket className="w-4 h-4 text-[var(--accent-primary)]" />
           </div>
           <div className="flex flex-col">
             <span className="font-medium text-[9px] text-[var(--accent-primary)] uppercase tracking-[0.2em] leading-none mb-1">Migrate AI</span>
@@ -138,10 +145,10 @@ export const Sidebar = ({
                 {activeTab === 'explorer' ? 'Explorer' : 'Source Control'}
               </h1>
               {activeTab === 'explorer' && (
-                <div className="flex gap-1 text-zinc-600">
-                  <div className="w-1 h-1 rounded-full bg-zinc-800" />
-                  <div className="w-1 h-1 rounded-full bg-zinc-800" />
-                  <div className="w-1 h-1 rounded-full bg-zinc-800" />
+                <div className="flex gap-1 text-[var(--text-muted)] opacity-40">
+                  <div className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
+                  <div className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
+                  <div className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
                 </div>
               )}
             </div>
@@ -157,18 +164,18 @@ export const Sidebar = ({
         ) : (
           <div className="py-2">
             <div className="flex items-center justify-between mb-2 px-6">
-              <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-[0.2em]">Repository Files</span>
-              <div className="w-8 h-[1px] bg-zinc-800" />
+              <span className="text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-[0.2em]">Repository Files</span>
+              <div className="w-8 h-[1px] bg-[var(--border-main)]" />
             </div>
 
             {loading ? (
               <div className="space-y-2 px-6">
-                <Skeleton className="h-6 w-full" count={8} />
+                <Skeleton className="h-6 w-full opacity-50" count={8} />
               </div>
             ) : files.length === 0 ? (
-              <div className="mx-6 p-8 text-[11px] text-zinc-500 italic bg-zinc-950/20 rounded-sm border border-zinc-900 text-center leading-relaxed">
+              <div className="mx-6 p-8 text-[11px] text-[var(--text-muted)] italic bg-[var(--bg-card)]/40 rounded-sm border border-[var(--border-main)] text-center leading-relaxed font-medium">
                 Connect a repository in the <br />
-                <span className="text-brand-yellow font-medium uppercase tracking-wider">Source Control</span> tab
+                <span className="text-[var(--accent-primary)] font-bold uppercase tracking-wider">Source Control</span> tab
               </div>
             ) : (
               <div className="flex flex-col">

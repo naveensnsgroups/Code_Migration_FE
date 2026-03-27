@@ -16,6 +16,8 @@ import { LogicUnitDetail } from './LogicUnitDetail';
 
 export const DashboardLayout = () => {
   const [activeTab, setActiveTab] = React.useState<'explorer' | 'git'>('git');
+  const [sidebarWidth, setSidebarWidth] = React.useState(320);
+  const [isResizing, setIsResizing] = React.useState(false);
 
   const {
     files,
@@ -38,17 +40,48 @@ export const DashboardLayout = () => {
     activeLogicUnitId,
     setActiveLogicUnitId,
     refreshFiles,
+    closeFile,
   } = useDashboard();
 
-  const activeLogicUnit = analysisResults.find(u => u.id === activeLogicUnitId);
+  const startResizing = React.useCallback(() => {
+    setIsResizing(true);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }, []);
 
+  const stopResizing = React.useCallback(() => {
+    setIsResizing(false);
+    document.body.style.cursor = 'default';
+    document.body.style.userSelect = 'auto';
+  }, []);
+
+  const resize = React.useCallback((mouseMoveEvent: MouseEvent) => {
+    if (isResizing) {
+      // Activity Bar width is 64px
+      const newWidth = mouseMoveEvent.clientX - 64;
+      if (newWidth >= 160 && newWidth <= 600) {
+        setSidebarWidth(newWidth);
+      }
+    }
+  }, [isResizing]);
+
+  React.useEffect(() => {
+    window.addEventListener("mousemove", resize);
+    window.addEventListener("mouseup", stopResizing);
+    return () => {
+      window.removeEventListener("mousemove", resize);
+      window.removeEventListener("mouseup", stopResizing);
+    };
+  }, [resize, stopResizing]);
+
+  const activeLogicUnit = analysisResults.find(u => u.id === activeLogicUnitId);
   const github = useGitHub(refreshFiles);
 
   const currentStep = analysisResults.length > 0 ? 'migrate' : files.length > 0 ? 'analyze' : 'connect';
   const selectedCount = analysisResults.filter(r => r.selected).length;
 
   return (
-    <div className="flex h-screen bg-[var(--bg-main)] text-[var(--text-main)] font-sans overflow-hidden transition-colors duration-300">
+    <div className={`flex h-screen bg-[var(--bg-main)] text-[var(--text-main)] font-sans overflow-hidden ${isResizing ? '' : 'transition-colors duration-300'}`}>
       <ActivityBar 
         activeTab={activeTab} 
         onTabChange={setActiveTab} 
@@ -65,10 +98,17 @@ export const DashboardLayout = () => {
         github={github}
         folderContents={folderContents}
         expandedFolders={expandedFolders}
+        width={sidebarWidth}
       />
 
-      <div className="flex-1 flex flex-col h-full overflow-hidden bg-[var(--bg-workspace)]">
-        <header className="h-12 border-b border-zinc-900/50 flex items-center justify-between px-4 bg-zinc-900/10 backdrop-blur-md shrink-0">
+      {/* Resize Handle */}
+      <div 
+        onMouseDown={startResizing}
+        className={`w-[1px] h-full cursor-col-resize hover:bg-[var(--accent-primary)] hover:shadow-[0_0_8px_var(--accent-primary)] transition-all z-50 ${isResizing ? 'bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)]' : 'bg-[var(--border-main)]'}`}
+      />
+
+      <div className="flex-1 flex flex-col h-full overflow-hidden bg-[var(--bg-workspace)] transition-colors duration-300">
+        <header className="h-12 border-b border-[var(--border-main)] flex items-center justify-between px-4 bg-[var(--bg-sidebar)]/50 backdrop-blur-md shrink-0">
           <div className="scale-90 origin-left">
             <ProgressionTracker currentStep={currentStep} />
           </div>
@@ -81,7 +121,7 @@ export const DashboardLayout = () => {
               onClick={analyzeProject}
               loading={isAnalyzing}
               disabled={isAnalyzing}
-              className="px-3 py-1 font-medium text-[11px] bg-zinc-900 border-zinc-800 hover:border-brand-yellow/50 transition-colors disabled:opacity-50"
+              className="px-3 py-1 font-semibold text-[11px] bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-primary)] transition-colors disabled:opacity-50 text-[var(--text-main)]"
             />
             <Button
               label={`Migrate ${selectedCount > 0 ? selectedCount : ''}`}
@@ -90,14 +130,14 @@ export const DashboardLayout = () => {
               onClick={executeMigration}
               loading={isMigrating}
               disabled={selectedCount === 0 || isMigrating}
-              className="px-3 py-1 font-medium text-[11px] bg-brand-yellow text-black hover:bg-white transition-all shadow-sm disabled:opacity-30 disabled:grayscale"
+              className="px-3 py-1 font-bold text-[11px] bg-[var(--accent-primary)] text-white hover:brightness-110 transition-all shadow-sm disabled:opacity-30 disabled:grayscale"
             />
           </div>
         </header>
 
-        <main className="flex-1 overflow-hidden flex bg-[radial-gradient(circle_at_top_right,rgba(250,204,21,0.02),transparent)]">
+        <main className="flex-1 overflow-hidden flex">
           <div className="flex-1 p-6 overflow-hidden">
-            <div className="h-full rounded-sm border border-zinc-800/50 bg-zinc-900/10 backdrop-blur-sm shadow-2xl overflow-hidden flex flex-col relative">
+            <div className="h-full rounded-sm border border-[var(--border-main)] bg-[var(--bg-card)]/30 backdrop-blur-sm shadow-xl overflow-hidden flex flex-col relative">
               {activeLogicUnit ? (
                 <LogicUnitDetail
                   unit={activeLogicUnit}
@@ -112,6 +152,7 @@ export const DashboardLayout = () => {
                   selectedFile={selectedFile}
                   fileContent={fileContent}
                   loading={isFileLoading}
+                  onClose={closeFile}
                 />
               ) : analysisResults.length > 0 ? (
                 <AnalysisPanel

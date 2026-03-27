@@ -167,5 +167,12 @@ export const useDashboard = () => {
     activeLogicUnitId,
     setActiveLogicUnitId,
     refreshFiles: () => fetchFiles(),
+    closeFile: () => {
+      setSelectedFile(null);
+      setFileContent('');
+      setAnalysisResults([]);
+      setActiveLogicUnitId(null);
+      addLog('Closed active file.', 'info');
+    }
   };
 };

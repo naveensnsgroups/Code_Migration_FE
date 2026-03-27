@@ -1,6 +1,6 @@
 import React from 'react';
 import Editor from '@monaco-editor/react';
-import { Code2, ChevronRight, Database } from 'lucide-react';
+import { Code2, ChevronRight, Database, X } from 'lucide-react';
 import { Skeleton } from '../../../components/Skeleton';
 import { useTheme } from '../../dashboard/components/ThemeContext';
 
@@ -8,9 +8,10 @@ interface CodeViewerProps {
   selectedFile: string | null;
   fileContent: string;
   loading: boolean;
+  onClose?: () => void;
 }
 
-export const CodeViewer = ({ selectedFile, fileContent, loading }: CodeViewerProps) => {
+export const CodeViewer = ({ selectedFile, fileContent, loading, onClose }: CodeViewerProps) => {
   const { theme } = useTheme();
 
   if (!selectedFile) {
@@ -33,13 +34,25 @@ export const CodeViewer = ({ selectedFile, fileContent, loading }: CodeViewerPro
     <section className="flex-1 relative h-full flex flex-col bg-[var(--bg-main)] transition-colors duration-300">
       {/* VS Code Style Tab Bar */}
       <div className="h-9 bg-[var(--bg-sidebar)] flex items-end px-2 border-b border-[var(--border-main)] shrink-0 overflow-x-auto no-scrollbar">
-        <div className="h-full px-4 flex items-center gap-2 bg-[var(--bg-main)] border-t border-l border-r border-[var(--border-main)] relative group min-w-[120px]">
+        <div className="h-full px-3 flex items-center gap-2 bg-[var(--bg-main)] border-t border-l border-r border-[var(--border-main)] relative group min-w-[140px] justify-between">
           {theme === 'dark' && <div className="absolute top-0 left-0 w-full h-[1.5px] bg-[var(--accent-primary)]" />}
-          <Code2 className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-[var(--accent-primary)]/70' : 'text-[var(--accent-primary)]'}`} />
-          <span className="text-[11px] font-medium text-[var(--text-main)] tracking-tight truncate max-w-[150px]">
-            {selectedFile.split('/').pop()}
-          </span>
-          <div className="w-1.5 h-1.5 rounded-full bg-[var(--border-accent)] ml-2 group-hover:bg-[var(--text-muted)] transition-colors" />
+          
+          <div className="flex items-center gap-2 min-w-0">
+            <Code2 className={`w-3.5 h-3.5 shrink-0 ${theme === 'dark' ? 'text-[var(--accent-primary)]/70' : 'text-[var(--accent-primary)]'}`} />
+            <span className="text-[11px] font-medium text-[var(--text-main)] tracking-tight truncate max-w-[120px]">
+              {selectedFile.split('/').pop()}
+            </span>
+          </div>
+
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose?.();
+            }}
+            className="w-5 h-5 flex items-center justify-center rounded-xs hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all ml-2 shrink-0 group-hover:opacity-100 opacity-60"
+          >
+            <X className="w-3 h-3" />
+          </button>
         </div>
       </div>
 

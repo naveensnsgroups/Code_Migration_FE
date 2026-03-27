@@ -78,7 +78,14 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      // Trigger backend cleanup of local cloned files
+      await githubApi.cleanup();
+    } catch (err) {
+      console.warn('Backend cleanup failed or already clean:', err);
+    }
+
     setAccessToken(null);
     setRepos([]);
     setAuthState('unauthenticated');

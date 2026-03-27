@@ -6,6 +6,7 @@ export interface RepoInfo {
   description: string | null;
   language: string | null;
   stargazers_count: number;
+  status?: string;
 }
 
 export interface FileItem {
