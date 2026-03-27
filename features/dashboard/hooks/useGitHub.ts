@@ -78,6 +78,18 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
     }
   };
 
+  const logout = () => {
+    setAccessToken(null);
+    setRepos([]);
+    setAuthState('unauthenticated');
+    setStatus('idle');
+    setMessage('');
+    
+    // Hard reset: Clear URL and force fresh state
+    const cleanUrl = window.location.pathname;
+    window.location.href = cleanUrl;
+  };
+
   return {
     authState,
     repos,
@@ -85,6 +97,7 @@ export const useGitHub = (onCloneSuccess?: () => void) => {
     status,
     message,
     login,
+    logout,
     fetchRepos: () => accessToken && fetchRepos(accessToken),
     cloneRepo,
     accessToken

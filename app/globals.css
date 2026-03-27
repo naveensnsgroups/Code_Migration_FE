@@ -1,31 +1,72 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: hsl(0 0% 100%);
-  --color-foreground: hsl(240 10% 3.9%);
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(240 10% 3.9%);
-  --color-primary: hsl(47 95% 55%);
-  --color-primary-foreground: hsl(240 5.9% 10%);
-  --color-secondary: hsl(240 4.8% 95.9%);
-  --color-secondary-foreground: hsl(240 5.9% 10%);
-  --color-muted: hsl(240 4.8% 95.9%);
-  --color-muted-foreground: hsl(240 3.8% 46.1%);
-  --color-accent: hsl(240 4.8% 95.9%);
-  --color-accent-foreground: hsl(240 5.9% 10%);
-  --color-destructive: hsl(0 84.2% 60.2%);
-  --color-border: hsl(240 5.9% 90%);
-  --color-input: hsl(240 5.9% 90%);
-  --color-ring: hsl(240 5.9% 10%);
-  --radius: 0.75rem;
+  --color-background: var(--bg-main);
+  --color-foreground: var(--text-main);
+  /* Add more mapping as needed */
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
+  :root {
+    --bg-main: #ffffff;
+    --bg-sidebar: #f3f3f3;
+    --bg-activity: #f3f3f3; 
+    --bg-workspace: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #e8e8e8;
+    
+    --text-main: #333333;
+    --text-muted: #616161;
+    --text-accent: #000000;
+    
+    --border-main: #e5e5e5;
+    --border-accent: #d1d1d1;
+    
+    --accent-primary: #007acc; /* VS Code Blue */
+    --accent-secondary: #000000;
   }
+
+  .dark {
+    --bg-main: #1e1e1e;
+    --bg-sidebar: #252526;
+    --bg-activity: #333333;
+    --bg-workspace: #1e1e1e;
+    --bg-card: #252526;
+    --bg-card-hover: #2a2d2e;
+    
+    --text-main: #cccccc;
+    --text-muted: #858585;
+    --text-accent: #ffffff;
+    
+    --border-main: #3c3c3c;
+    --border-accent: #474747;
+    
+    --accent-primary: #007acc;
+    --accent-secondary: #ffffff;
+  }
+
+  * {
+    border-color: var(--border-main);
+  }
+  
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Custom Scrollbar adaptive */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--border-main);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
   }
 }

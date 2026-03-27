@@ -1,9 +1,8 @@
-"use client";
-
 import React from 'react';
 import Editor from '@monaco-editor/react';
 import { Code2, ChevronRight, Database } from 'lucide-react';
 import { Skeleton } from '../../../components/Skeleton';
+import { useTheme } from '../../dashboard/components/ThemeContext';
 
 interface CodeViewerProps {
   selectedFile: string | null;
@@ -12,15 +11,17 @@ interface CodeViewerProps {
 }
 
 export const CodeViewer = ({ selectedFile, fileContent, loading }: CodeViewerProps) => {
+  const { theme } = useTheme();
+
   if (!selectedFile) {
     return (
-      <div className="flex flex-col items-center justify-center h-full space-y-6 text-center">
-        <div className="p-6 bg-zinc-900 rounded-3xl border border-zinc-800 shadow-2xl animate-pulse">
-          <Database className="w-12 h-12 text-zinc-700" />
+      <div className="flex flex-col items-center justify-center h-full space-y-6 text-center bg-[var(--bg-main)]">
+        <div className="p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)] shadow-2xl animate-pulse">
+          <Database className="w-12 h-12 text-[var(--text-muted)]" />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-white">No File Selected</h3>
-          <p className="text-zinc-500 max-w-xs mx-auto text-sm leading-relaxed">
+          <h3 className="text-xl font-semibold text-[var(--text-main)]">No File Selected</h3>
+          <p className="text-[var(--text-muted)] max-w-xs mx-auto text-sm leading-relaxed">
             Select a file from the explorer to begin analyzing and migrating your code.
           </p>
         </div>
@@ -29,62 +30,78 @@ export const CodeViewer = ({ selectedFile, fileContent, loading }: CodeViewerPro
   }
 
   return (
-    <section className="flex-1 relative h-full flex flex-col">
-      <header className="h-16 border-b border-zinc-800 flex items-center px-8 bg-zinc-900/20 shrink-0">
-        <div className="flex items-center gap-3 text-sm font-medium">
-          <Code2 className="w-4 h-4 text-zinc-500" />
-          <span className="text-zinc-500">Source Viewer</span>
-          <ChevronRight className="w-3 h-3 text-zinc-700" />
-          <span className="text-white bg-zinc-800 px-3 py-1 rounded-full text-xs border border-zinc-700">
-            {selectedFile}
+    <section className="flex-1 relative h-full flex flex-col bg-[var(--bg-main)] transition-colors duration-300">
+      {/* VS Code Style Tab Bar */}
+      <div className="h-9 bg-[var(--bg-sidebar)] flex items-end px-2 border-b border-[var(--border-main)] shrink-0 overflow-x-auto no-scrollbar">
+        <div className="h-full px-4 flex items-center gap-2 bg-[var(--bg-main)] border-t border-l border-r border-[var(--border-main)] relative group min-w-[120px]">
+          {theme === 'dark' && <div className="absolute top-0 left-0 w-full h-[1.5px] bg-[var(--accent-primary)]" />}
+          <Code2 className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-[var(--accent-primary)]/70' : 'text-[var(--accent-primary)]'}`} />
+          <span className="text-[11px] font-medium text-[var(--text-main)] tracking-tight truncate max-w-[150px]">
+            {selectedFile.split('/').pop()}
           </span>
+          <div className="w-1.5 h-1.5 rounded-full bg-[var(--border-accent)] ml-2 group-hover:bg-[var(--text-muted)] transition-colors" />
         </div>
-      </header>
+      </div>
 
-      <div className="flex-1 p-8 overflow-hidden">
+      {/* Breadcrumb Area */}
+      <div className="h-7 px-4 flex items-center gap-1.5 bg-[var(--bg-main)] border-b border-[var(--border-main)]/50 text-[10px] text-[var(--text-muted)] font-medium shrink-0">
+        <span className="hover:text-[var(--text-main)] transition-colors cursor-pointer">Source Viewer</span>
+        <ChevronRight className="w-3 h-3 text-[var(--border-accent)]" />
+        <span className="text-[var(--text-main)] opacity-70 truncate">{selectedFile}</span>
+      </div>
+
+      <div className="flex-1 relative overflow-hidden bg-[var(--bg-main)]">
         {loading ? (
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-[80%]" />
-            <Skeleton className="h-4 w-[60%]" />
-            <Skeleton className="h-4 w-[90%]" />
-            <Skeleton className="h-4 w-[40%]" />
-            <Skeleton className="h-4 w-[75%]" count={10} />
+          <div className="p-8 space-y-4">
+            {[...Array(15)].map((_, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="w-8 h-4 bg-zinc-900/50 rounded-xs" />
+                <div className={`h-4 bg-zinc-900/30 rounded-xs ${i % 3 === 0 ? 'w-[70%]' : i % 2 === 0 ? 'w-[40%]' : 'w-[90%]'}`} />
+              </div>
+            ))}
           </div>
         ) : (
           <Editor
             height="100%"
-            theme="vs-dark"
+            theme={theme === 'dark' ? 'vs-dark' : 'light'}
             path={selectedFile}
-            defaultLanguage="javascript"
+            defaultLanguage={selectedFile.split('.').pop() === 'html' ? 'html' : 'javascript'}
             value={fileContent}
-            loading={<div className="flex items-center justify-center h-full text-zinc-500">Loading code engine...</div>}
+            loading={<div className="flex items-center justify-center h-full text-[var(--text-muted)] font-medium text-xs uppercase tracking-widest">Initialising Engine...</div>}
             options={{
               readOnly: true,
-              fontSize: 13,
-              minimap: { enabled: true, scale: 0.75, showSlider: 'mouseover' },
-              padding: { top: 20, bottom: 20 },
+              fontSize: 12.5,
+              fontWeight: '500',
+              minimap: { enabled: true, side: 'right', renderCharacters: false },
+              padding: { top: 16, bottom: 16 },
               lineNumbers: 'on',
-              lineNumbersMinChars: 3,
+              lineNumbersMinChars: 4,
+              glyphMargin: false,
+              folding: true,
               scrollBeyondLastLine: false,
               automaticLayout: true,
-              fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-              smoothScrolling: true,
-              cursorBlinking: 'smooth',
-              cursorSmoothCaretAnimation: "on",
+              fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, monospace",
+              letterSpacing: 0.2,
+              lineHeight: 1.6,
               renderLineHighlight: 'all',
               fontLigatures: true,
-              hideCursorInOverviewRuler: true,
-              overviewRulerBorder: false,
               scrollbar: {
-                vertical: 'hidden',
-                horizontal: 'hidden',
+                vertical: 'visible',
+                horizontal: 'visible',
+                verticalScrollbarSize: 10,
+                horizontalScrollbarSize: 10,
                 useShadows: false,
-                verticalHasArrows: false,
-                horizontalHasArrows: false,
-              }
+              },
+              overviewRulerLanes: 0,
+              hideCursorInOverviewRuler: true,
             }}
           />
         )}
+        
+        {/* Read-only Badge */}
+        <div className="absolute bottom-4 right-8 px-2.5 py-1 bg-[var(--bg-sidebar)]/80 border border-[var(--border-main)] rounded-sm text-[9px] font-medium text-[var(--text-muted)] uppercase tracking-widest backdrop-blur-md shadow-2xl">
+          Read Only Editor
+        </div>
       </div>
     </section>
   );

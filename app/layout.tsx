@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "Professional Next.js frontend for code migration and analysis",
 };
 
+import { ThemeProvider } from "../features/dashboard/components/ThemeContext";
+
 export default function RootLayout({
   children,
 }: {
@@ -18,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable} ${jetbrains.variable} font-sans`}>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

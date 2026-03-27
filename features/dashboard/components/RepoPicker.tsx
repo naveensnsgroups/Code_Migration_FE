@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Search, GitBranch, Star, Code, Loader2 } from 'lucide-react';
-import { RepoInfo } from '../apis/github.api';
+import { RepoInfo } from '../types';
 
 interface RepoPickerProps {
   repos: RepoInfo[];
@@ -32,49 +32,48 @@ export const RepoPicker = ({ repos, onSelect, loading }: RepoPickerProps) => {
         />
       </div>
 
-      {/* Repo List */}
-      <div className="max-h-64 overflow-y-auto space-y-2 custom-scrollbar">
+      <div className="max-h-80 overflow-y-auto space-y-1 custom-scrollbar">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-8 space-y-3">
-            <Loader2 className="w-6 h-6 text-yellow-400 animate-spin" />
-            <p className="text-xs text-zinc-500 font-medium">Fetching repositories...</p>
+          <div className="flex flex-col items-center justify-center py-10 space-y-3">
+            <Loader2 className="w-5 h-5 text-brand-yellow/60 animate-spin" />
+            <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-widest">Fetching Source...</p>
           </div>
         ) : filteredRepos.length === 0 ? (
-          <div className="text-center py-8 bg-zinc-900/40 rounded-sm border border-dashed border-zinc-800">
-            <p className="text-xs text-zinc-500 italic">No repositories found.</p>
+          <div className="flex flex-col items-center justify-center py-10 border border-dashed border-zinc-900 rounded-sm">
+            <p className="text-[10px] text-zinc-600 italic">No repositories indexed.</p>
           </div>
         ) : (
           filteredRepos.map((repo) => (
             <button
               key={repo.id}
               onClick={() => onSelect(repo)}
-              className="w-full text-left p-3 rounded-sm bg-zinc-900/60 border border-zinc-800 hover:border-yellow-400/40 hover:bg-zinc-800/80 transition-all group"
+              className="w-full text-left p-3 rounded-sm bg-zinc-900/10 border border-zinc-900 hover:border-brand-yellow/30 hover:bg-zinc-900/40 transition-all group overflow-hidden"
             >
-              <div className="flex justify-between items-start mb-1">
-                <span className="text-sm font-semibold text-zinc-100 group-hover:text-yellow-400 truncate">
+              <div className="flex justify-between items-start mb-1.5">
+                <span className="text-[12px] font-medium text-zinc-200 group-hover:text-brand-yellow truncate tracking-tight">
                   {repo.name}
                 </span>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-semibold uppercase">
-                  <Star className="w-3 h-3 text-yellow-500/80" />
+                <div className="flex items-center gap-1.5 text-[9px] text-zinc-500 font-medium uppercase tracking-tighter">
+                  <Star className="w-3 h-3 text-brand-yellow/40 group-hover:text-brand-yellow/80 transition-colors" />
                   {repo.stargazers_count}
                 </div>
               </div>
 
               {repo.description && (
-                <p className="text-[11px] text-zinc-500 line-clamp-1 mb-2 leading-relaxed">
+                <p className="text-[10px] text-zinc-500 line-clamp-1 mb-2 font-light">
                   {repo.description}
                 </p>
               )}
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 {repo.language && (
-                  <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-semibold">
-                    <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                  <div className="flex items-center gap-1.5 text-[9px] text-zinc-400 font-medium uppercase tracking-wider">
+                    <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow/60" />
                     {repo.language}
                   </div>
                 )}
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-semibold">
-                  <GitBranch className="w-3 h-3 text-zinc-600" />
+                <div className="flex items-center gap-1.5 text-[9px] text-zinc-500 font-medium uppercase tracking-wider group-hover:text-zinc-400 transition-colors">
+                  <GitBranch className="w-2.5 h-2.5" />
                   {repo.full_name.split('/')[0]}
                 </div>
               </div>

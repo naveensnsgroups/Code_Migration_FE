@@ -12,10 +12,23 @@ export interface FileItem {
   name: string;
   isDir: boolean;
   path: string;
+  status?: 'modified' | 'added' | 'deleted';
+}
+
+export interface LogicUnit {
+  id: string;
+  name: string;
+  type: 'ui_component' | 'api_logic' | 'business_rule';
+  priority: 'high' | 'medium' | 'low';
+  description: string;
+  selected?: boolean;
 }
 
 export interface FileContent {
   content: string;
   path: string;
   encoding: string;
+  analysis?: {
+    logic_units: LogicUnit[];
+  };
 }

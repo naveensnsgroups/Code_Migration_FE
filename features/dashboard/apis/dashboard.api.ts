@@ -12,4 +12,10 @@ export const dashboardApi = {
     
   analyzeSourceFile: (path: string) =>
     axios.post(`${API_BASE_URL}/api/migrations/analyze`, { path }),
+    
+  analyzeProject: () =>
+    axios.post(`${API_BASE_URL}/api/migrations/analyze-project`),
+    
+  executeMigration: (selected_units: LogicUnit[]) =>
+    axios.post(`${API_BASE_URL}/api/migrations/execute`, { selected_units }),
 };

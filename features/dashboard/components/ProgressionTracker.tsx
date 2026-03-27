@@ -24,18 +24,17 @@ export const ProgressionTracker = ({ currentStep }: ProgressionTrackerProps) => 
 
         return (
           <React.Fragment key={step.id}>
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all border ${
-              isActive 
-                ? 'bg-brand-yellow/5 border-brand-yellow/30 text-brand-yellow shadow-sm' 
+            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-all border ${isActive
+                ? 'bg-[var(--accent-primary)]/5 border-[var(--accent-primary)]/30 text-[var(--accent-primary)] shadow-sm'
                 : isCompleted
                   ? 'bg-emerald-400/5 border-emerald-400/20 text-emerald-400'
-                  : 'bg-transparent border-transparent text-zinc-600'
-            }`}>
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'animate-pulse' : ''}`} />
-              <span className="text-[10px] font-medium uppercase tracking-[0.1em]">{step.label}</span>
+                  : 'bg-transparent border-transparent text-[var(--text-muted)]'
+              }`}>
+              <Icon className={`w-3 h-3 ${isActive ? 'animate-pulse' : ''}`} />
+              <span className="text-[9px] font-medium uppercase tracking-widest">{step.label}</span>
             </div>
             {index < steps.length - 1 && (
-              <ChevronRight className="w-3 h-3 text-zinc-800" />
+              <ChevronRight className="w-2.5 h-2.5 text-[var(--border-main)]" />
             )}
           </React.Fragment>
         );
